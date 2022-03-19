@@ -47,7 +47,8 @@ class WorkoutsList extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 8,vertical: 4),
           child: Container(
             decoration: const BoxDecoration(
-                color: Color.fromRGBO(50, 65, 85, 0.9)
+              //color: Color.fromRGBO(50, 65, 85, 0.9)
+              color: Colors.blueAccent
             ),
             //листТайл - лемент списка
             child: ListTile(
@@ -86,7 +87,9 @@ class WorkoutsList extends StatelessWidget {
               //там будет в-я сабтайтл, возвращающая Row
               //в нее передаем контекст и текущий элемент массива воркоутс
               subtitle: subtitle(context, workouts[i]),
-              onTap: (){},
+              onTap: (){
+
+              },
             ),
           ),
         );
