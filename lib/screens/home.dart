@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:max_fit/domain/workout.dart';
+import 'package:max_fit/services/auth.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,6 +13,14 @@ class HomePage extends StatelessWidget {
         backgroundColor: Colors.black26,
         title: const Text('MaxFit'),
         leading: const Icon(Icons.fitness_center),
+        actions: [
+          IconButton(
+              onPressed: (){
+                AuthService().logOut();
+              },
+              icon: const Icon(Icons.logout)
+          )
+        ],
       ),
       //возвращает стейтлесс виджет вокоутЛист
       body: WorkoutsList(),

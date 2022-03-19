@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+//import 'package:max_fit/domain/authUser.dart';
+import 'package:max_fit/services/auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 //класс, наследующий от КастомСлиппер
 //рисует кривую безье --ПРОСТО ЗАПОМНИТЬ--
@@ -42,12 +45,17 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  //dev var
+  //String _dev = 'MAXFIT';
+
   //в них присваивается значение после нажатия кнопки
   String? _email;
   String? _password;
 
   //показывать надпись ЛОГИН ? или Регистрация
   bool showlogin = true;
+
+  final AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +67,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
         //Алигн - центрирует по центру по-умолчанию (аналог Центр)
         child: Align(
           child: Text(
+            //'MAXFIT',
             'MAXFIT',
             style: TextStyle(
               fontSize: 45,
@@ -176,15 +185,54 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
       );
     }
 
-    //ф-я действие кнопки
-    void _buttonAction(){
+    //ф-я действие кнопки LOGIN
+    void _loginButtonAction() async {
       //в переменные присваиваем из контроллера-текст
       _email = _emailController.text;
       _password = _passwordController.text;
 
-      //после присваивания очищаем контроллеры
-      _emailController.clear();
-      _passwordController.clear();
+      if(_email!.isEmpty || _password!.isEmpty) return;
+
+      var user = await _authService.signInWithEmailAndPassword(_email!.trim(), _password!.trim());
+      if(user==null) {
+        Fluttertoast.showToast(
+          msg: "Can't SignIn you! Please check your email/password",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          backgroundColor: Colors.black87,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      } else {
+        //после присваивания очищаем контроллеры
+        _emailController.clear();
+        _passwordController.clear();
+      }
+    }
+
+    //ф-я действие кнопки REGISTER
+    void _registerButtonAction() async {
+      //в переменные присваиваем из контроллера-текст
+      _email = _emailController.text;
+      _password = _passwordController.text;
+
+      if(_email!.isEmpty || _password!.isEmpty) return;
+
+      var user = await _authService.registerWithEmailAndPassword(_email!.trim(), _password!.trim());
+      if(user==null) {
+        Fluttertoast.showToast(
+            msg: "Can't Register you! Please check your email/password",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            backgroundColor: Colors.black87,
+            textColor: Colors.white,
+            fontSize: 16.0
+        );
+      } else {
+        //после присваивания очищаем контроллеры
+        _emailController.clear();
+        _passwordController.clear();
+      }
     }
 
     //возвращает кривую безье
@@ -223,7 +271,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                   children: [
                     //форма с кнопкой ЛОГИН и ф-ей баттонЭкшн
                     //ф-я кнопок одна и та же: записать значения полей в переменные и очистить поля
-                    _form('LOGIN', _buttonAction),
+                    _form('LOGIN', _loginButtonAction),
                     Padding(
                       padding: const EdgeInsets.all(10),
                       //ГестурДетектор - что-то типа ТекстБаттон. Кликабельный текст с onTap()
@@ -246,7 +294,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
               children: [
                 //форма с кнопкой РЕГИСТЕР и ф-ей баттонЭкшн
                 //ф-я кнопок одна и та же: записать значения полей в переменные и очистить поля
-                _form('REGISTER', _buttonAction),
+                _form('REGISTER', _registerButtonAction),
                 Padding(
                   padding: const EdgeInsets.all(10),
                   //ГестурДетектор - что-то типа ТекстБаттон. Кликабельный текст с onTap()
