@@ -176,6 +176,8 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
             padding: const EdgeInsets.only(left: 20,right: 20),
             child: SizedBox(
               height: 50,
+              //ширина СайзедБокса берется из МедиаКвери.офКонтекст
+              //из данных окна приложения, его ширины
               width: MediaQuery.of(context).size.width,
               //кнопка. передаем в нее текст кнопки и ф-ю
               child: _button(label,func),
@@ -191,10 +193,17 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
       _email = _emailController.text;
       _password = _passwordController.text;
 
+      //если переменные пустые - вернуть пустоту (дальнейший код прекращается)
       if(_email!.isEmpty || _password!.isEmpty) return;
 
+      //в юзер вставляем возвратные данные из метода авторизации (сигнИнВизЕмайлИПассворд)
+      //этот метод авторизации логинит в файрбейс и возвращает что-то для проверки инфо
+      //либо возвращает пустоту, если логин не удался
+      //в метод передаем _емайл и _пассворд с методом трим (чтобы обрезать пробелы по бокам)
       var user = await _authService.signInWithEmailAndPassword(_email!.trim(), _password!.trim());
+      //если юзер вернул пустоту выдать сообщение об ошибки
       if(user==null) {
+        //Флаттертоаст - подключаемый модуль, выдающий сообщения
         Fluttertoast.showToast(
           msg: "Can't SignIn you! Please check your email/password",
           toastLength: Toast.LENGTH_SHORT,
@@ -203,6 +212,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
           textColor: Colors.white,
           fontSize: 16.0,
         );
+        //иначе просто чистим поля. Логин произойдет сам
       } else {
         //после присваивания очищаем контроллеры
         _emailController.clear();
@@ -218,6 +228,10 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
 
       if(_email!.isEmpty || _password!.isEmpty) return;
 
+      //в юзер вставляем возвратные данные из метода регистрации (регистерИнВизЕмайлИПассворд)
+      //этот метод регистрации регистрирует в файрбейс и возвращает что-то для проверки инфо
+      //либо возвращает пустоту, если регистрация не удалась
+      //в метод передаем _емайл и _пассворд с методом трим (чтобы обрезать пробелы по бокам)
       var user = await _authService.registerWithEmailAndPassword(_email!.trim(), _password!.trim());
       if(user==null) {
         Fluttertoast.showToast(
@@ -228,6 +242,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
             textColor: Colors.white,
             fontSize: 16.0
         );
+        //иначе просто чистим поля. Логин произойдет сам
       } else {
         //после присваивания очищаем контроллеры
         _emailController.clear();
@@ -266,7 +281,9 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
           //типа (showlogin ? Column() : Column() )
           //если showlogin истина - вставляется 1й столбец ,иначе вставляется 2й столбец
           (
+            //если шоуЛогин = истина
             showlogin ?
+                //вставить этот столбец
                 Column(
                   children: [
                     //форма с кнопкой ЛОГИН и ф-ей баттонЭкшн
@@ -290,6 +307,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                     )
                   ],
                 )
+            //иначе вставить этот столбец
             : Column(
               children: [
                 //форма с кнопкой РЕГИСТЕР и ф-ей баттонЭкшн
