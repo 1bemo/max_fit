@@ -1,11 +1,21 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:max_fit/domain/workout.dart';
 import 'package:max_fit/services/auth.dart';
 
+import '../components/activeWorkouts.dart';
 import '../components/workoutList.dart';
 
-class HomePage extends StatelessWidget {
+// ignore: must_be_immutable
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int sectionIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -13,8 +23,8 @@ class HomePage extends StatelessWidget {
       backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
         backgroundColor: Colors.black26,
-        title: const Text('MaxFit'),
-        leading: const Icon(Icons.fitness_center),
+        title: Text('MaxFit// ' + (sectionIndex==0 ? 'Active Workouts ' : 'FindWorkouts')),
+        leading: const Icon(  Icons.fitness_center),
         actions: [
           IconButton(
               onPressed: (){
@@ -24,8 +34,25 @@ class HomePage extends StatelessWidget {
           )
         ],
       ),
-      //возвращает стейтлесс виджет вокоутЛист
-      body: WorkoutsList(),
+      body: sectionIndex == 0 ? const ActiveWorkouts() : WorkoutsList(),
+      bottomNavigationBar: CurvedNavigationBar(
+        items: const <Widget>[
+          Icon(Icons.fitness_center),
+          Icon(Icons.search)
+        ],
+        index: sectionIndex,
+        height: 50,
+        color: Colors.black.withOpacity(0.3),
+        buttonBackgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).primaryColor,
+        animationCurve: Curves.easeInOutCubic,
+        animationDuration: const Duration(milliseconds: 300),
+        onTap: (int index){
+          setState(() {
+            sectionIndex = index;
+          });
+        },
+      ),
     );
   }
 }
