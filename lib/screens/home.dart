@@ -6,7 +6,9 @@ import 'package:max_fit/services/auth.dart';
 import '../components/activeWorkouts.dart';
 import '../components/workoutList.dart';
 
+//для игнорирования незначительных ошибок
 // ignore: must_be_immutable
+//стейтфул для перерисовки боди
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -15,6 +17,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  //индекс для БоттомНавигаторБар
   int sectionIndex = 0;
 
   @override
@@ -23,30 +26,43 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
         backgroundColor: Colors.black26,
-        title: Text('MaxFit// ' + (sectionIndex==0 ? 'Active Workouts ' : 'FindWorkouts')),
+        //к МаксФит // лепим от условия (если секшонИндекс=0, пишем Актив. иначе Файнд)
+        title: Text('MaxFit // ' + (sectionIndex==0 ? 'Active ' : 'Find')),
         leading: const Icon(  Icons.fitness_center),
         actions: [
           IconButton(
-              onPressed: (){
-                AuthService().logOut();
-              },
-              icon: const Icon(Icons.logout)
+            tooltip: 'LogOut',
+            onPressed: (){
+              //логаут из пользователя
+              AuthService().logOut();
+            },
+            icon: const Icon(Icons.logout)
           )
         ],
       ),
-      body: sectionIndex == 0 ? const ActiveWorkouts() : WorkoutsList(),
+      //в боди условие (если индекс=0,отрисовываем АктивВоркаут, иначе ВоркаутЛист)
+      body: sectionIndex == 0 ? const ActiveWorkouts() : const WorkoutsList(),
+      //подключаемый красивый навигаторБар
       bottomNavigationBar: CurvedNavigationBar(
+        //айтемс - кнопки
         items: const <Widget>[
           Icon(Icons.fitness_center),
           Icon(Icons.search)
         ],
+        //индекс кнопок. Отсчет с нуля
         index: sectionIndex,
+        //высота
         height: 50,
+        //цвета
         color: Colors.black.withOpacity(0.3),
         buttonBackgroundColor: Colors.white,
         backgroundColor: Theme.of(context).primaryColor,
+        //анимация по кривой из класса Кривые
         animationCurve: Curves.easeInOutCubic,
+        //скорость анимации
         animationDuration: const Duration(milliseconds: 300),
+        //при нажатии сетСтейт в переменную секшнИндекс приписываем индекс
+        //из ф-ии теккущей
         onTap: (int index){
           setState(() {
             sectionIndex = index;
