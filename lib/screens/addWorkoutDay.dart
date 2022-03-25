@@ -212,6 +212,7 @@ class _AddWorkoutDayState extends State<AddWorkoutDay> {
                 onPressed: () async {
                   var result = await showDialog(
                       context: context,
+                      //
                       builder: (_) => drillRemoveAlert(context));
                   if (result) _removeDrill(block);
                 },
