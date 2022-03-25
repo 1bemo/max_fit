@@ -128,7 +128,7 @@ Widget subtitle(BuildContext context, Workout workout) {
           //просто текст
           child: Text(
             //берем из текущего воркоут.левел - название уровня
-            workout.level,
+            workout.level!,
             style: TextStyle(
                 color: Theme.of(context).textTheme.titleMedium?.color
             ),

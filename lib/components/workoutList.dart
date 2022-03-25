@@ -158,7 +158,7 @@ class _WorkoutsListState extends State<WorkoutsList> {
                 //заголовок
                 title: Text(
                   //заголовок берется из массива по индексу, далее ключ тайтл
-                  workouts[i].title,
+                  workouts[i].title!,
                   style: TextStyle(
                       color: Theme.of(context).textTheme.titleMedium?.color,
                       fontWeight: FontWeight.bold
